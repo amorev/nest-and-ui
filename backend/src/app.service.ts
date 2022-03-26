@@ -1,20 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { InjectConfig } from 'nestjs-config';
+import { UsersService } from './users/users.service';
 
 @Injectable()
 export class AppService {
   constructor(
-      @InjectConfig() private readonly config
+      @InjectConfig() private readonly config,
+      private userService: UsersService,
   ) {
   }
   getHello(): string {
     return 'Hello World!';
   }
 
-  // Simple method for check, that dotenv and config are connected successfully
+  // This method just make users count request. If database not work it will throw error
   async checkDatabaseConnection (): Promise<boolean> {
-    const config = this.config.get('database.host');
-    console.log({ config });
+    await this.userService.getUserCount()
     return true;
   }
 }
