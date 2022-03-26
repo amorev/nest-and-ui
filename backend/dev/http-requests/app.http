@@ -1,0 +1,4 @@
+### Check database connection
+GET {{url}}/databaseConnected
+Content-Type: application/json
+Authorization: Bearer {{token}}
