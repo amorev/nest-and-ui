@@ -5,6 +5,7 @@ import { ConfigModule, ConfigService } from 'nestjs-config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as path from 'path';
 import { UsersModule } from './users/users.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 @Module({
     imports: [
@@ -24,7 +25,12 @@ import { UsersModule } from './users/users.module';
             },
             inject: [ConfigService],
         }),
-        UsersModule
+        UsersModule,
+        ServeStaticModule.forRoot({
+            rootPath: path.join(__dirname, '..', 'static'),
+            serveRoot: '/',
+            exclude: ['/api*'],
+        }),
     ],
     controllers: [AppController],
     providers: [AppService],

@@ -1,4 +1,4 @@
 ### Check database connection
-GET {{url}}/databaseConnected
+GET {{url}}/api/databaseConnected
 Content-Type: application/json
 Authorization: Bearer {{token}}
