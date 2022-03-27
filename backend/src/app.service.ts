@@ -48,4 +48,13 @@ export class AppService {
             }
         });
     }
+
+    async getFile(fileId: number, userId: number): Promise<FileElement> {
+        return this.fileRepository.findOne({
+            where: {
+                id: fileId,
+                userId
+            }
+        })
+    }
 }

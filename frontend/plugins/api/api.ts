@@ -7,6 +7,10 @@ export class ApiHandler {
     return this._service;
   }
 
+  getMainUrl(): string {
+    return this.mainUrl
+  }
+
   private _service: AxiosConnectorService;
 
   constructor(private mainUrl: string,
