@@ -6,7 +6,9 @@ export default {
   server: {
     port: 3001
   },
-
+  env: {
+    apiUrl: process.env.API_URL ? process.env.API_URL : process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : '',
+  },
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
 
@@ -31,6 +33,7 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    { src: '~/plugins/core.ts', ssr: false },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -50,6 +53,7 @@ export default {
     '@nuxtjs/axios',
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
+    'cookie-universal-nuxt',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
