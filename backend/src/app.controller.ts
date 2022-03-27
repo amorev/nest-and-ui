@@ -72,7 +72,7 @@ export class AppController {
 
     @Get('/filelist')
     @UseGuards(JwtAuthGuard)
-    filelist() {
-        return this.appService.fileList();
+    filelist(@Request() req) {
+        return this.appService.fileList(req.user.userId);
     }
 }

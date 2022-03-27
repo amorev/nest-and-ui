@@ -8,38 +8,44 @@ import { User } from './users/users.entity';
 
 @Injectable()
 export class AppService {
-  constructor(
-      @InjectConfig() private readonly config,
-      @InjectRepository(FileElement)
-      private fileRepository: Repository<FileElement>,
-      private userService: UsersService,
-  ) {
-  }
-  getHello(): string {
-    return 'Hello World!';
-  }
+    constructor(
+        @InjectConfig() private readonly config,
+        @InjectRepository(FileElement)
+        private fileRepository: Repository<FileElement>,
+        private userService: UsersService,
+    ) {
+    }
 
-  // This method just make users count request. If database not work it will throw error
-  async checkDatabaseConnection (): Promise<boolean> {
-    await this.userService.getUserCount()
-    return true;
-  }
-  async fillTestData() {
-    await this.userService.createUser('manager', 'manager')
-  }
+    getHello(): string {
+        return 'Hello World!';
+    }
 
-  async uploadFile(file: Express.Multer.File, userId): Promise<FileElement> {
-    let fileEl = new FileElement();
-    fileEl.filename = file.filename;
-    fileEl.originalFileName = file.originalname;
-    fileEl.size = file.size;
-    fileEl.userId = userId;
-    const fileElement = await this.fileRepository.save(fileEl)
+    // This method just make users count request. If database not work it will throw error
+    async checkDatabaseConnection(): Promise<boolean> {
+        await this.userService.getUserCount();
+        return true;
+    }
 
-    return fileElement
-  }
+    async fillTestData() {
+        await this.userService.createUser('manager', 'manager');
+    }
 
-  async fileList(): Promise<FileElement[]> {
-    return this.fileRepository.find();
-  }
+    async uploadFile(file: Express.Multer.File, userId): Promise<FileElement> {
+        let fileEl = new FileElement();
+        fileEl.filename = file.filename;
+        fileEl.originalFileName = file.originalname;
+        fileEl.size = file.size;
+        fileEl.userId = userId;
+        const fileElement = await this.fileRepository.save(fileEl);
+
+        return fileElement;
+    }
+
+    async fileList(userId: number): Promise<FileElement[]> {
+        return this.fileRepository.find({
+            where: {
+                userId
+            }
+        });
+    }
 }
