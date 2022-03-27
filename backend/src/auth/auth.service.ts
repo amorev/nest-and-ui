@@ -49,6 +49,26 @@ export class AuthService {
     }
   }
 
+  async signup(userInfo: {
+    username: string,
+    password: string
+  }) {
+    try {
+      const [user] = await this.usersService.createUser(userInfo.username,userInfo.password);
+      const payload = { username: user.username, sub: user.id };
+      const refreshToken = this.makeRefreshToken(user);
+      await this.usersService.setCurrentRefreshToken(refreshToken, user.id);
+      return {
+        access_token: this.jwtService.sign(payload),
+        refresh_token: refreshToken,
+        expireTime: this.expireTimeAccess,
+      };
+    } catch (e) {
+      this.logger.error('Auth error: ' + e);
+      throw new Error("Signup error");
+    }
+  }
+
   async refreshToken(user: User) {
     const payload = { username: user.username, sub: user.id };
 

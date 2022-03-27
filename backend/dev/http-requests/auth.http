@@ -32,3 +32,12 @@ GET {{url}}/api/checkAuth
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
+### Create new user
+
+POST {{url}}/api/auth/signup
+Content-Type: application/json
+
+{
+  "username": "manager1",
+  "password": "manager"
+}

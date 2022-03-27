@@ -23,6 +23,11 @@ export class AppController {
         return this.authService.login(req.user);
     }
 
+    @Post('/auth/signup')
+    async signup(@Request() req) {
+        return this.authService.signup(req.body);
+    }
+
     @Get()
     getHello(): string {
         return this.appService.getHello();

@@ -72,6 +72,7 @@ export class UsersService {
         }
     }
 
+    //todo check if user is created and throw error
     async createUser(username: string, password: string) {
         return this.usersRepository.save([
             {

@@ -4,7 +4,7 @@
       <v-card class="elevation-12">
         <v-toolbar dark color="primary">
           <v-spacer />
-          <v-toolbar-title>Login</v-toolbar-title>
+          <v-toolbar-title>Sign up</v-toolbar-title>
           <v-spacer />
           <v-tooltip bottom />
           <v-tooltip right />
@@ -21,10 +21,16 @@
             label="Password"
             type="password"
           />
+          <v-text-field
+            v-model="repeatPassword"
+            outline
+            label="Repeat Password"
+            type="password"
+          />
           <v-layout>
             <v-spacer />
             <v-btn
-              @click="login"
+              @click="signup"
             >
               Войти
             </v-btn>
@@ -41,19 +47,20 @@ export default {
   name: 'Login',
   layout: 'centered',
   data () {
-    let username, password
-    if (process.env.NODE_ENV === 'development') {
-      username = password = 'manager'
-    }
+    let username, password = ''
     return {
       username,
       password,
-      errorMessage: null
+      repeatPassword: '',
+      errorMessage: ''
     }
   },
   methods: {
-    login (_) {
-      return this.$core.api.authenticate(this.username, this.password)
+    signup (_) {
+      if (this.password !== this.repeatPassword) {
+        this.errorMessage = 'Passwords are not same'
+      }
+      return this.$core.api.signup(this.username, this.password)
     }
   }
 }
