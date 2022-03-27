@@ -111,6 +111,16 @@ export default {
           icon: 'mdi-chart-bubble',
           title: 'Login',
           to: '/login'
+        },
+        {
+          icon: 'mdi-chart-bubble',
+          title: 'File upload',
+          to: '/upload'
+        },
+        {
+          icon: 'mdi-chart-bubble',
+          title: 'File list',
+          to: '/filelist'
         }
       ],
       miniVariant: false,
