@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import * as path from 'path';
 import { UsersModule } from './users/users.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
     imports: [
@@ -31,6 +32,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
             serveRoot: '/',
             exclude: ['/api*'],
         }),
+        AuthModule,
     ],
     controllers: [AppController],
     providers: [AppService],

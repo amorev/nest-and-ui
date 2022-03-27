@@ -18,4 +18,7 @@ export class AppService {
     await this.userService.getUserCount()
     return true;
   }
+  async fillTestData() {
+    await this.userService.createUser('manager', 'manager')
+  }
 }
