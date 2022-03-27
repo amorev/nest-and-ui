@@ -1,4 +1,4 @@
-import { ApiHandler, AuthHandler } from './api'
+import { ApiHandler, AuthHandler } from './api';
 // import { ApiHandler, AuthHandler } from './../../packages/core-api/src';
 import { Context } from '@nuxt/types';
 import { NuxtCookies } from 'cookie-universal-nuxt';
@@ -6,6 +6,7 @@ import { NuxtCookies } from 'cookie-universal-nuxt';
 type $core = {
   api: ApiHandler,
   authHandler: AuthHandler,
+  getFileIdLink(fileId: number): string
 };
 
 
@@ -30,23 +31,26 @@ declare module '@nuxt/types' {
 export default (app: Context, inject: any) => {
   const authHandler = new AuthHandler(app.$cookies);
   let mainUrl = process.env.apiUrl ?? '';
-  console.log({ mainUrl });
-  const core = {
-    actor: {},
-    authHandler,
-    api: new ApiHandler(mainUrl, authHandler, {
-      callbacks: {
-        redirectToLogin: () => {
-          return app.redirect('/login');
-        },
-        handleSuccessAuth: () => {
-          return app.redirect('/');
-        },
-        handleLogout: () => {
-          return app.redirect('/login');
-        }
+  console.log({mainUrl});
+  let apiHandler = new ApiHandler(mainUrl, authHandler, {
+    callbacks: {
+      redirectToLogin: () => {
+        return app.redirect('/login');
+      },
+      handleSuccessAuth: () => {
+        return app.redirect('/');
+      },
+      handleLogout: () => {
+        return app.redirect('/login');
       }
-    }),
+    }
+  });
+  const core: Partial<$core> = {
+    authHandler,
+    api: apiHandler,
+    getFileIdLink: function (fileId) {
+      return apiHandler.getMainUrl() + '/api/download?id=' + fileId + '&token=' + authHandler.getAccessToken();
+    }
   };
   inject('core', core);
 }

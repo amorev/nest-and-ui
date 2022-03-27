@@ -37,7 +37,7 @@ export default {
     this.fileList = data.map(file => {
       return{
         ...file,
-        link: this.$core.api.getMainUrl() + '/api/download?id=' + file.id+'&token=' + this.$core.authHandler.getAccessToken()
+        link: this.$core.getFileIdLink(file.id)
       }
     })
   }

@@ -1,10 +1,11 @@
 <template>
   <div>
-    File uploader
-    <v-btn @click="uploadDialog = true">Upload more</v-btn>
     <UploadComponent
-      :dialog.sync="uploadDialog" :multiple="false" @filesUploaded="processUpload($event)"
+      :multiple="false" @filesUploaded="processUpload($event)"
     />
+    <div v-for="file in uploaded">
+      <a :href="file.link">{{ file.originalFileName }}</a>
+    </div>
   </div>
 </template>
 
@@ -16,27 +17,26 @@ export default {
   components: { UploadComponent },
   data () {
     return {
-      uploadDialog: true
+      uploadDialog: true,
+      uploaded: []
     }
   },
   methods: {
-    processUpload (data) {
-      let formData = new FormData();
-      formData.append('file', data[0]);
-      this.$core.api.service.post( '/upload',
+    async processUpload (file) {
+      let formData = new FormData()
+      formData.append('file', file[0])
+      const { data } = await this.$core.api.service.post('/upload',
         formData,
         {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
         }
-      ).then(function(){
-        console.log('SUCCESS!!');
+      )
+      this.uploaded.push({
+        ...data,
+        link: this.$core.getFileIdLink(data.id)
       })
-        .catch(function(){
-          console.log('FAILURE!!');
-        });
-      console.log(data)
     }
   }
 }

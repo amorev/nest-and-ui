@@ -1,5 +1,5 @@
 <template>
-  <v-dialog @click:outside="closeDialog" :value="dialog" max-width="450px">
+  <div>
     <v-card
       @drop.prevent="onDrop($event)"
       @dragover.prevent="dragover = true"
@@ -47,16 +47,12 @@
       <v-card-actions>
         <v-spacer></v-spacer>
 
-        <v-btn @click="closeDialog" icon>
-          <v-icon id="close-button">mdi-close</v-icon>
-        </v-btn>
-
         <v-btn icon @click.stop="submit">
           <v-icon id="upload-button">mdi-upload</v-icon>
         </v-btn>
       </v-card-actions>
     </v-card>
-  </v-dialog>
+  </div>
 </template>
 
 <script>
@@ -82,13 +78,6 @@ export default {
   },
 
   methods: {
-    closeDialog () {
-      // Remove all the uploaded files
-      this.uploadedFiles = []
-      // Close the dialog box
-      this.$emit('update:dialog', false)
-    },
-
     removeFile (fileName) {
       // Find the index of the
       const index = this.uploadedFiles.findIndex(
@@ -102,39 +91,22 @@ export default {
     onDrop (e) {
       this.dragover = false
 
-      // If there are already uploaded files remove them
       if (this.uploadedFiles.length > 0) this.uploadedFiles = []
       if (e.dataTransfer.files.length === 0) {
         return
       }
 
-      // If user has uploaded multiple files but the component is not multiple throw error
       if (!this.multiple && e.dataTransfer.files.length > 1) {
-        this.$store.dispatch('addNotification', {
-          message: 'Only one file can be uploaded at a time..',
-          colour: 'error'
-        })
-      }
-      // Add each file to the array of uploaded files
-      else {
+        console.error('Only one file can be uploaded at a time..')
+      } else {
         for (var i = 0; i < e.dataTransfer.files.length; i++) {
           this.uploadedFiles.push(e.dataTransfer.files[i])
         }
       }
     },
-
     submit () {
-      // If there aren't any files to be uploaded throw error
-      if (!this.uploadedFiles.length > 0) {
-        this.$store.dispatch('addNotification', {
-          message: 'There are no files to upload',
-          colour: 'error'
-        })
-      } else {
-        // Send uploaded files to parent component
+      if (this.uploadedFiles.length > 0) {
         this.$emit('filesUploaded', this.uploadedFiles)
-        // Close the dialog box
-        this.closeDialog()
       }
     }
   }
