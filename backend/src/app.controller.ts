@@ -1,9 +1,20 @@
-import { Controller, Get, Post, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, UseGuards, Request, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
 import { LocalAuthGuard } from './auth/local-auth.guard';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { JwtRefreshAuthGuard } from './auth/jwt-refresh.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
+import * as multer from 'multer'
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './uploads')
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+        cb(null, file.fieldname + '-' + uniqueSuffix)
+    }
+})
 
 @Controller()
 export class AppController {
@@ -48,5 +59,20 @@ export class AppController {
     @UseGuards(JwtRefreshAuthGuard)
     refreshToken(@Request() req): any {
         return this.authService.refreshToken(req.user);
+    }
+
+    @Post('/upload')
+    @UseGuards(JwtAuthGuard)
+    @UseInterceptors(FileInterceptor('file', {
+        storage
+    }))
+    upload(@UploadedFile() file: Express.Multer.File, @Request() req) {
+        return this.appService.uploadFile(file, req.user.userId);
+    }
+
+    @Get('/filelist')
+    @UseGuards(JwtAuthGuard)
+    filelist() {
+        return this.appService.fileList();
     }
 }

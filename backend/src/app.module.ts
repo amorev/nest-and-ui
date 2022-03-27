@@ -7,6 +7,7 @@ import * as path from 'path';
 import { UsersModule } from './users/users.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { AuthModule } from './auth/auth.module';
+import { FileElement } from './file/fileElement.entity';
 
 @Module({
     imports: [
@@ -33,6 +34,7 @@ import { AuthModule } from './auth/auth.module';
             exclude: ['/api*'],
         }),
         AuthModule,
+        TypeOrmModule.forFeature([FileElement])
     ],
     controllers: [AppController],
     providers: [AppService],

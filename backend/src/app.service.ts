@@ -1,11 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectConfig } from 'nestjs-config';
 import { UsersService } from './users/users.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { FileElement } from './file/fileElement.entity';
+import { Repository } from 'typeorm';
+import { User } from './users/users.entity';
 
 @Injectable()
 export class AppService {
   constructor(
       @InjectConfig() private readonly config,
+      @InjectRepository(FileElement)
+      private fileRepository: Repository<FileElement>,
       private userService: UsersService,
   ) {
   }
@@ -20,5 +26,20 @@ export class AppService {
   }
   async fillTestData() {
     await this.userService.createUser('manager', 'manager')
+  }
+
+  async uploadFile(file: Express.Multer.File, userId): Promise<FileElement> {
+    let fileEl = new FileElement();
+    fileEl.filename = file.filename;
+    fileEl.originalFileName = file.originalname;
+    fileEl.size = file.size;
+    fileEl.userId = userId;
+    const fileElement = await this.fileRepository.save(fileEl)
+
+    return fileElement
+  }
+
+  async fileList(): Promise<FileElement[]> {
+    return this.fileRepository.find();
   }
 }

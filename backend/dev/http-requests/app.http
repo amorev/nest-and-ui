@@ -2,3 +2,19 @@
 GET {{url}}/api/databaseConnected
 Content-Type: application/json
 Authorization: Bearer {{token}}
+
+### Get user files
+GET {{url}}/api/filelist
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+### Upload file
+POST {{url}}/api/upload
+Content-Type: multipart/form-data; boundary=boundary
+Authorization: Bearer {{auth_token}}
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="input.txt"
+
+// The 'input.txt' file will be uploaded
+< ./input.txt
