@@ -78,6 +78,9 @@ export class AppController {
     @UseGuards(JwtAuthGuard)
     @UseInterceptors(FilesInterceptor('files', 10,{
         storage,
+        limits: {
+            fileSize: 5242880
+        }
     }))
     async upload(@UploadedFiles() files: Express.Multer.File[], @Request() req) {
         const result = [];
