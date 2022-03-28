@@ -15,6 +15,10 @@
           <p>
             Drop your file(s) here, or click to select them.
           </p>
+          <v-file-input
+            truncate-length="21"
+            @change="fileUpload"
+          ></v-file-input>
         </v-row>
         <v-virtual-scroll
           v-if="uploadedFiles.length > 0"
@@ -87,11 +91,22 @@ export default {
       // If file is in uploaded files remove it
       if (index > -1) this.uploadedFiles.splice(index, 1)
     },
-
+    fileUpload (file) {
+      this.addFile(file)
+    },
+    addFile (file) {
+      console.log('adding', file)
+      if (file && file.size < 5242880)
+      {
+        console.log(this.uploadedFiles)
+        this.uploadedFiles.push(file)
+      }
+      console.log(this.uploadedFiles)
+    },
     onDrop (e) {
       this.dragover = false
+      console.log(e)
 
-      if (this.uploadedFiles.length > 0) this.uploadedFiles = []
       if (e.dataTransfer.files.length === 0) {
         return
       }
@@ -100,7 +115,8 @@ export default {
         console.error('Only one file can be uploaded at a time..')
       } else {
         for (var i = 0; i < e.dataTransfer.files.length; i++) {
-          this.uploadedFiles.push(e.dataTransfer.files[i])
+          let file = e.dataTransfer.files[i]
+          this.addFile(file)
         }
       }
     },

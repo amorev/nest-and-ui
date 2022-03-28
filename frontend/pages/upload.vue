@@ -22,9 +22,11 @@ export default {
     }
   },
   methods: {
-    async processUpload (file) {
+    async processUpload (files) {
       let formData = new FormData()
-      formData.append('file', file[0])
+      for (let file of files) {
+        formData.append('files', file)
+      }
       const { data } = await this.$core.api.service.post('/upload',
         formData,
         {
@@ -33,9 +35,10 @@ export default {
           }
         }
       )
+      for (const fileEl of data)
       this.uploaded.push({
-        ...data,
-        link: this.$core.getFileIdLink(data.id)
+        ...fileEl,
+        link: this.$core.getFileIdLink(fileEl.id)
       })
     }
   }

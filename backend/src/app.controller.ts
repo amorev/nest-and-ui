@@ -6,7 +6,7 @@ import {
     Request,
     Response,
     UseInterceptors,
-    UploadedFile,
+    UploadedFiles,
     Res,
     StreamableFile
 } from '@nestjs/common';
@@ -15,7 +15,7 @@ import { AuthService } from './auth/auth.service';
 import { LocalAuthGuard } from './auth/local-auth.guard';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { JwtRefreshAuthGuard } from './auth/jwt-refresh.guard';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import * as multer from 'multer';
 import { createReadStream } from 'fs';
 
@@ -76,12 +76,15 @@ export class AppController {
 
     @Post('/upload')
     @UseGuards(JwtAuthGuard)
-    @UseInterceptors(FileInterceptor('file', {
-        storage
+    @UseInterceptors(FilesInterceptor('files', 10,{
+        storage,
     }))
-    upload(@UploadedFile() file: Express.Multer.File, @Request() req) {
-        console.log(file);
-        return this.appService.uploadFile(file, req.user.userId);
+    async upload(@UploadedFiles() files: Express.Multer.File[], @Request() req) {
+        const result = [];
+        console.log(files);
+        for (let file of files)
+            result.push(await this.appService.uploadFile(file, req.user.userId));
+        return result;
     }
 
     @Get('/filelist')
