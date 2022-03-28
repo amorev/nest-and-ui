@@ -1,0 +1,30 @@
+version: "2"
+services:
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: main
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123123
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+  builder:
+    build:
+      context: .
+    links:
+      - postgres
+    expose:
+      - 3000
+    ports:
+      - 3000:3000
+    environment:
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=123123
+      - DATABASE_NAME=main
+
+volumes:
+  postgres:

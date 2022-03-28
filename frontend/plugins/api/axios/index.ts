@@ -3,7 +3,7 @@ import axios, { AxiosInstance, AxiosInterceptorManager, AxiosRequestConfig } fro
 export type ConnectionOptions = AxiosRequestConfig
     & Partial<{
     reqHandleFunc: Parameters<AxiosInterceptorManager<AxiosRequestConfig>['use']>[0]
-    resErrorFunc: (_) => any
+    resErrorFunc: Parameters<AxiosInterceptorManager<AxiosRequestConfig>['use']>[0]
     resHandleFunc: Parameters<AxiosInterceptorManager<AxiosRequestConfig>['use']>[0]
 }>;
 

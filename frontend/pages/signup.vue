@@ -28,11 +28,16 @@
             type="password"
           />
           <v-layout>
+            <v-btn
+              @click="$router.push('/login')"
+            >
+              Sign in
+            </v-btn>
             <v-spacer />
             <v-btn
               @click="signup"
             >
-              Войти
+              Sign up
             </v-btn>
           </v-layout>
           <span class="error_message">{{ errorMessage }}</span>

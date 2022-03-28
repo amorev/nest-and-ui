@@ -43,7 +43,9 @@ export class UsersService {
 
     async findOne(username: string): Promise<any | undefined> {
         return this.usersRepository.findOne({
-            username,
+            where: {
+                username
+            },
         });
     }
 
@@ -60,7 +62,11 @@ export class UsersService {
     }
 
     async getUserIfRefreshTokenMatches(refreshToken: string, userId: number) {
-        const user = await this.usersRepository.findOne({ id: userId });
+        const user = await this.usersRepository.findOne({
+            where: {
+                id: userId
+            }
+        });
 
         const isRefreshTokenMatching = await bcrypt.compare(
             refreshToken,

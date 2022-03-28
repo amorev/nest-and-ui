@@ -53,8 +53,8 @@ export class ApiHandler {
         }
         return Promise.reject(config);
       },
-      resHandleFunc: (r) => r,
-      validateStatus: function (status) {
+      resHandleFunc: (r: any) => r,
+      validateStatus: function (status: number) {
         return status < 400; // Resolve only if the status code is less than 500
       }
     };

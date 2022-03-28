@@ -42,7 +42,7 @@ export class AppService {
         duplicate?: boolean
     }> {
         let fileEl = new FileElement();
-        const fileHash = await this.createHashFromFile('./uploads/' + file.filename);
+        const fileHash = await this.createHashFromFile('./uploads/' + file.filename) as string;
         const fileByHash = await this.fileRepository.findOne({
             where: {
                 fileHash
