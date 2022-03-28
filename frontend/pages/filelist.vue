@@ -27,7 +27,6 @@ export default {
         },
         { text: 'Size', value: 'size' },
         { text: 'Created at', value: 'createdAt' },
-        { text: 'Link', value: 'link' },
       ],
       fileList: [],
     }
