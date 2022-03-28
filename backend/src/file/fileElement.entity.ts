@@ -1,4 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, JoinColumn, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  JoinColumn,
+  ManyToOne,
+} from 'typeorm';
 import { User } from '../users/users.entity';
 
 @Entity()
@@ -7,7 +13,7 @@ export class FileElement {
   id: number;
 
   @Column({
-    unique: true
+    unique: true,
   })
   filename: string;
 
@@ -16,23 +22,23 @@ export class FileElement {
 
   @Column({
     nullable: true,
-    unique: true
+    unique: true,
   })
   fileHash: string;
 
   @Column()
-  size: number
+  size: number;
 
-  @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP"})
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: string;
 
   @ManyToOne(() => User, (user) => user.files, {
-    nullable: true
+    nullable: true,
   })
-  user: User
+  user: User;
 
   @Column({
-    nullable: true
+    nullable: true,
   })
   userId: number;
 }
