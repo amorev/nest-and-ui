@@ -14,7 +14,7 @@ Content-Type: multipart/form-data; boundary=boundary
 Authorization: Bearer {{auth_token}}
 
 --boundary
-Content-Disposition: form-data; name="file"; filename="input.txt"
+Content-Disposition: form-data; name="files"; filename="input.txt"
 
 // The 'input.txt' file will be uploaded
 < ./input.txt

@@ -22,7 +22,7 @@ import { FileElement } from './file/fileElement.entity';
                 return {
                     ...config.get('database'),
                     entities: [path.resolve(__dirname + '/../dist/**/*.entity{.ts,.js}')],
-                    synchronize: false
+                    synchronize: true
                 };
             },
             inject: [ConfigService],

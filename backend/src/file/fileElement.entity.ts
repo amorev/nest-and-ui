@@ -14,6 +14,12 @@ export class FileElement {
   @Column()
   originalFileName: string;
 
+  @Column({
+    nullable: true,
+    unique: true
+  })
+  fileHash: string;
+
   @Column()
   size: number
 
@@ -25,6 +31,8 @@ export class FileElement {
   })
   user: User
 
-  @Column()
+  @Column({
+    nullable: true
+  })
   userId: number;
 }

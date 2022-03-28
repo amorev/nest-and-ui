@@ -17,7 +17,7 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { JwtRefreshAuthGuard } from './auth/jwt-refresh.guard';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import * as multer from 'multer';
-import { createReadStream } from 'fs';
+import { createReadStream, unlink } from 'fs';
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -76,7 +76,7 @@ export class AppController {
 
     @Post('/upload')
     @UseGuards(JwtAuthGuard)
-    @UseInterceptors(FilesInterceptor('files', 10,{
+    @UseInterceptors(FilesInterceptor('files', 10, {
         storage,
         limits: {
             fileSize: 5242880
@@ -85,8 +85,15 @@ export class AppController {
     async upload(@UploadedFiles() files: Express.Multer.File[], @Request() req) {
         const result = [];
         console.log(files);
-        for (let file of files)
-            result.push(await this.appService.uploadFile(file, req.user.userId));
+        for (let file of files) {
+            let fileElement = await this.appService.uploadFile(file, req.user.userId);
+            if (fileElement.duplicate) {
+                unlink('./uploads/'+ file.filename, (err) => {
+                    console.error('delete file error', file)
+                })
+            }
+            result.push(fileElement.element);
+        }
         return result;
     }
 

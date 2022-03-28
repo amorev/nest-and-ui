@@ -5,6 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FileElement } from './file/fileElement.entity';
 import { Repository } from 'typeorm';
 import { User } from './users/users.entity';
+import * as fs from 'fs';
+import * as crypto from 'crypto';
 
 @Injectable()
 export class AppService {
@@ -30,15 +32,38 @@ export class AppService {
         await this.userService.createUser('manager', 'manager');
     }
 
-    async uploadFile(file: Express.Multer.File, userId): Promise<FileElement> {
+    createHashFromFile = filePath => new Promise(resolve => {
+        const hash = crypto.createHash('sha1');
+        fs.createReadStream(filePath).on('data', data => hash.update(data)).on('end', () => resolve(hash.digest('hex')));
+    });
+
+    async uploadFile(file: Express.Multer.File, userId): Promise<{
+        element: FileElement,
+        duplicate?: boolean
+    }> {
         let fileEl = new FileElement();
+        const fileHash = await this.createHashFromFile('./uploads/' + file.filename);
+        const fileByHash = await this.fileRepository.findOne({
+            where: {
+                fileHash
+            }
+        });
+        if (fileByHash) {
+            return {
+                element:fileByHash,
+                duplicate: true
+            };
+        }
+        fileEl.fileHash = fileHash.toString();
         fileEl.filename = file.filename;
         fileEl.originalFileName = file.originalname;
         fileEl.size = file.size;
         fileEl.userId = userId;
         const fileElement = await this.fileRepository.save(fileEl);
 
-        return fileElement;
+        return {
+            element: fileElement
+        };
     }
 
     async fileList(userId: number): Promise<FileElement[]> {
@@ -55,6 +80,6 @@ export class AppService {
                 id: fileId,
                 userId
             }
-        })
+        });
     }
 }
